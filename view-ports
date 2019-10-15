@@ -1,0 +1,100 @@
+class Port
+{
+  constructor(name,country,type,size,locprecision,lat,lng)
+  {
+    this._name = name;
+    this._country = country;
+    this._type = type;
+    this._size = size;
+    this._locprecision = locprecision;
+    this._lat = lat;
+    this._long = long;
+  }
+  get name(){return this._name;}
+  get country(){return this._country;}
+  get type(){return this._type;}
+  get size(){return this._size;}
+  get locprecision(){return this._locprecision;}
+  get lat(){return this._lat;}
+  get lng(){return this._lng;}
+  fromData(data)
+  {
+      this._name = data._name;
+      this._country = data._country;
+      this._type = data._type;
+      this._size = data._size;
+      this._locprecision = data._locprecision;
+      this._lat = data._lat;
+      this._long = data._long;
+  }
+}
+
+function jsonpRequest(url,data)
+{
+    // Build URL parameters from data object.
+    let params = "";
+    // For each key in data object...
+    for (let key in data)
+    {
+        if (data.hasOwnProperty(key))
+        {
+            if (params.length == 0)
+            {
+                // First parameter starts with '?'
+                params += "?";
+            }
+            else
+            {
+                // Subsequent parameter separated by '&'
+                params += "&";
+            }
+
+            let encodedKey = encodeURIComponent(key);
+            let encodedValue = encodeURIComponent(data[key]);
+
+            params += encodedKey + "=" + encodedValue;
+         }
+    }
+    let script = document.createElement('script');
+    script.src = url + params;
+    document.body.appendChild(script);
+}
+
+let data = [
+    {
+      callback:"loadships"
+    },
+    {
+      callback:"loadports"
+    }
+
+];
+
+function loadports(arr)
+{
+  let html = '';
+	let ports = [];
+  for(let i = 0; i < arr.ports.length; i++)
+	{
+		ports[i] = arr.ports[i];
+    html += "<tr> <td onmousedown=\"listRowTapped("+i+")\" class=\"full-width mdl-data-table__cell--non-numeric\">" + '<b>' + arr.ports[i].name + '</b>';
+    html += "<div class=\"subtitle\" style='margin-left:5px'>" + arr.ports[i].country + "</div>";
+    html += "<td><a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect\" onclick=\"portdetails("+i+")\"><i class='material-icons' style='font-size:40px;left:40%''>more_horiz</i></a></td>";
+	}
+  document.getElementById('ports-list').innerHTML = html;
+}
+
+function portdetails(index)
+{
+	document.getElementById("portinfo").style.visibility = "visible";
+	let selectedStudent = faculty.getStudent(index);
+	document.getElementById("studentId").innerText = selectedStudent.studentId;
+	document.getElementById("fullName").innerText = selectedStudent.fullName;
+	document.getElementById("dateOfBirth").innerText = selectedStudent.dob;
+	document.getElementById("gender").innerText = selectedStudent.gender;
+	document.getElementById("address").innerText = selectedStudent.address;
+	document.getElementById("country").innerText = selectedStudent.country;
+	document.getElementById("email").innerText = selectedStudent.email;
+	document.getElementById("phone").innerText = selectedStudent.phone;
+	document.getElementById("enrolmentRecordButton").setAttribute("onclick","showEnrolmentRecord("+index+")");
+}
